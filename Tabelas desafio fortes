@@ -1,0 +1,42 @@
+create database if not exists aplicativo;
+use aplicativo;
+ 
+ create table if not exists colaborador(
+ cod_funcionario int primary key not null unique,
+ nome varchar (56) not null,
+ senha varchar(30) not null,
+ cargo enum ('colaborador','nutricionista','gestor'),
+ alojamento bit not null
+);
+ 
+create table if not exists cardapio (
+cod_refeicao int primary key not null,
+dia date not null unique,
+refeicao enum ('Café da manhã', 'Almoço', 'Janta') not null,
+comida varchar(120)
+);
+
+create table if not exists confirmacao_refeicao (
+cod_confirmacao_refeicao int primary key not null,
+cod_digital int,
+cod_app int,
+cod_funcionario int not null,
+cod_refeicao int not null,
+tipo_refeicao enum('refeitorio', 'externo') not null,
+constraint FKcod_funcionario foreign key (cod_funcionario) references colaborador (cod_funcionario),
+constraint FKcod_refeicao foreign key (cod_refeicao) references cardapio (cod_refeicao) 
+);
+
+create table if not exists feedback (
+cod_feedback int primary key not null,
+cod_confirmacao_refeicao int not null,
+feedback varchar (300),
+nota int not null,
+constraint FKcod_confirmacao_refeicao foreign key (cod_confirmacao_refeicao) references confirmacao_refeicao(cod_confirmacao_refeicao)
+);
+
+create table if not exists avisos (
+cod_aviso int primary key not null,
+aviso varchar (600) not null,
+data_postagem datetime not null default current_timestamp
+);
